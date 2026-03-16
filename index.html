@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ar • Personal Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #18181b 0%, #27272a 100%); }
+        .link-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .link-card:hover { transform: scale(1.05) translateY(-4px); box-shadow: 0 0 30px rgba(234, 179, 8, 0.3); }
+        .avatar-glow { box-shadow: 0 0 40px rgba(234, 179, 8, 0.5); }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen hero-bg">
+    <div class="max-w-xl mx-auto px-6 py-12">
+        
+        <!-- HEADER -->
+        <div class="flex justify-end mb-4">
+            <button onclick="showEditModal()" 
+                    class="bg-amber-500 hover:bg-amber-600 px-6 py-3 rounded-2xl font-semibold flex items-center gap-2 text-sm">
+                <i class="fa-solid fa-pen"></i>
+                Edit Profile
+            </button>
+        </div>
+
+        <div class="text-center mb-12">
+            <div class="relative w-32 h-32 mx-auto mb-6">
+                <img id="avatar-img" 
+                     src="https://picsum.photos/id/64/300/300" 
+                     alt="Avatar" 
+                     class="avatar-glow w-full h-full rounded-3xl object-cover border-4 border-amber-400">
+                <div class="absolute -bottom-1 -right-1 bg-emerald-500 w-8 h-8 rounded-2xl flex items-center justify-center border-4 border-zinc-950">
+                    <i class="fa-solid fa-check text-xs"></i>
+                </div>
+            </div>
+            
+            <h1 id="display-name" class="text-5xl font-bold tracking-tighter mb-1">Ar</h1>
+            <p id="display-username" class="text-xl text-amber-300">@aryanxsikak</p>
+            <p id="display-location" class="text-zinc-400 mt-1">Jakarta, Indonesia 🇮🇩</p>
+            
+            <div class="mt-6 max-w-xs mx-auto">
+                <p id="display-bio" class="text-zinc-300 text-sm leading-relaxed">
+                    Halo! Saya Ar (Aryan Sikak). Pecinta tech, kopi, dan segala hal random. 
+                    Ini profile pribadi saya. Connect yuk!
+                </p>
+            </div>
+        </div>
+
+        <!-- SOCIAL LINKS (hanya X, IG, Telegram, Email) -->
+        <div id="social-grid" class="space-y-4">
+            <!-- Diisi JS -->
+        </div>
+
+        <!-- FOOTER -->
+        <div class="mt-16 text-center text-xs text-zinc-500">
+            <p>Made with ❤️ in Jakarta • Data tersimpan di browser kamu selamanya</p>
+            <p class="mt-1">Simpan file ini sebagai <span class="text-amber-400">profile.html</span></p>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div id="edit-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-zinc-900 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold">Edit Profile</h2>
+                    <button onclick="hideEditModal()" class="text-4xl text-zinc-400 hover:text-white">×</button>
+                </div>
+
+                <form id="edit-form" onsubmit="saveProfile(event)">
+                    
+                    <!-- UPLOAD FOTO PROFILE LANGSUNG -->
+                    <div class="mb-8">
+                        <label class="block text-sm text-zinc-400 mb-3">Foto Profile</label>
+                        <div class="flex items-center gap-6">
+                            <!-- Preview -->
+                            <img id="edit-avatar-preview" 
+                                 src="https://picsum.photos/id/64/300/300" 
+                                 class="w-24 h-24 rounded-2xl object-cover border-2 border-amber-400">
+                            
+                            <!-- Upload Button -->
+                            <div class="flex-1">
+                                <label class="cursor-pointer bg-zinc-800 hover:bg-zinc-700 px-6 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 w-fit">
+                                    <i class="fa-solid fa-upload"></i>
+                                    <span>Pilih Foto dari HP/Galeri</span>
+                                    <input type="file" id="edit-avatar-file" accept="image/*" class="hidden">
+                                </label>
+                                <p class="text-xs text-zinc-500 mt-3">Atau paste URL gambar di bawah</p>
+                                <input id="edit-avatar-url" type="url" placeholder="https://..." 
+                                       class="mt-2 w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-3 text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nama & Username -->
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">Nama Lengkap</label>
+                            <input id="edit-name" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">Username (@)</label>
+                            <input id="edit-username" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-amber-500">
+                        </div>
+                    </div>
+
+                    <!-- Lokasi -->
+                    <div class="mb-6">
+                        <label class="block text-sm text-zinc-400 mb-2">Lokasi</label>
+                        <input id="edit-location" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="mb-8">
+                        <label class="block text-sm text-zinc-400 mb-2">Bio / Deskripsi</label>
+                        <textarea id="edit-bio" rows="4" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-amber-500"></textarea>
+                    </div>
+
+                    <!-- SOCIAL LINKS (hanya 4) -->
+                    <div class="mb-8">
+                        <p class="text-sm text-zinc-400 mb-4">Link Sosial</p>
+                        
+                        <!-- X -->
+                        <div class="mb-6">
+                            <label class="block text-xs text-zinc-500 mb-1">X / Twitter</label>
+                            <div class="flex gap-3">
+                                <input id="edit-x-handle" placeholder="@username" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                                <input id="edit-x-url" type="url" placeholder="https://x.com/..." class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                            </div>
+                        </div>
+
+                        <!-- Instagram -->
+                        <div class="mb-6">
+                            <label class="block text-xs text-zinc-500 mb-1">Instagram</label>
+                            <div class="flex gap-3">
+                                <input id="edit-ig-handle" placeholder="username" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                                <input id="edit-ig-url" type="url" placeholder="https://instagram.com/..." class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                            </div>
+                        </div>
+
+                        <!-- Telegram -->
+                        <div class="mb-6">
+                            <label class="block text-xs text-zinc-500 mb-1">Telegram</label>
+                            <div class="flex gap-3">
+                                <input id="edit-tg-handle" placeholder="@username" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                                <input id="edit-tg-url" type="url" placeholder="https://t.me/..." class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-xs text-zinc-500 mb-1">Email</label>
+                            <div class="flex gap-3">
+                                <input id="edit-email" type="email" placeholder="emailkamu@gmail.com" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                                <input id="edit-email-url" type="url" placeholder="mailto:..." class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button type="button" onclick="hideEditModal()" 
+                                class="flex-1 py-5 rounded-2xl border border-zinc-700 font-medium">Batal</button>
+                        <button type="submit" 
+                                class="flex-1 py-5 bg-amber-500 hover:bg-amber-600 rounded-2xl font-semibold">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let profileData = {
+            avatar: "https://picsum.photos/id/64/300/300",
+            name: "Ar",
+            username: "@aryanxsikak",
+            location: "Jakarta, Indonesia 🇮🇩",
+            bio: "Halo! Saya Ar (Aryan Sikak). Pecinta tech, kopi, dan segala hal random. Ini profile pribadi saya. Connect yuk!",
+            socials: {
+                x: { handle: "@aryanxsikak", url: "https://x.com/aryanxsikak" },
+                ig: { handle: "aryanxsikak", url: "https://instagram.com/aryanxsikak" },
+                telegram: { handle: "@aryanxsikak", url: "https://t.me/aryanxsikak" },
+                email: { handle: "emailkamu@gmail.com", url: "mailto:emailkamu@gmail.com" }
+            }
+        }
+
+        function loadProfile() {
+            const saved = localStorage.getItem('myPersonalProfile')
+            if (saved) profileData = JSON.parse(saved)
+            renderProfile()
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('myPersonalProfile', JSON.stringify(profileData))
+        }
+
+        function renderProfile() {
+            document.getElementById('avatar-img').src = profileData.avatar
+            document.getElementById('display-name').textContent = profileData.name
+            document.getElementById('display-username').textContent = profileData.username
+            document.getElementById('display-location').textContent = profileData.location
+            document.getElementById('display-bio').textContent = profileData.bio
+
+            const grid = document.getElementById('social-grid')
+            grid.innerHTML = ''
+
+            grid.innerHTML += createLinkCard('x', '𝕏', 'X / Twitter', profileData.socials.x.handle, profileData.socials.x.url, '#000')
+            grid.innerHTML += createLinkCard('ig', '📷', 'Instagram', profileData.socials.ig.handle, profileData.socials.ig.url, 'linear-gradient(to right, #f56040, #c13584)')
+            grid.innerHTML += createLinkCard('telegram', '✈️', 'Telegram', profileData.socials.telegram.handle, profileData.socials.telegram.url, '#229ED9')
+            grid.innerHTML += createLinkCard('email', '✉️', 'Email', profileData.socials.email.handle, profileData.socials.email.url, '#ea4335')
+        }
+
+        function createLinkCard(key, icon, title, handle, url, color) {
+            return `
+                <a href="${url}" target="_blank" class="link-card bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-3xl p-6 flex items-center gap-5 group">
+                    <div style="background: ${color}" class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl text-white">
+                        ${icon}
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-lg group-hover:text-amber-400 transition-colors">${title}</p>
+                        <p class="text-zinc-400 text-sm">${handle}</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-2xl text-zinc-500 group-hover:text-amber-400 transition-colors"></i>
+                </a>
+            `
+        }
+
+        function showEditModal() {
+            // Preview foto
+            document.getElementById('edit-avatar-preview').src = profileData.avatar
+            document.getElementById('edit-avatar-url').value = profileData.avatar.startsWith('data:') ? '' : profileData.avatar
+
+            document.getElementById('edit-name').value = profileData.name
+            document.getElementById('edit-username').value = profileData.username
+            document.getElementById('edit-location').value = profileData.location
+            document.getElementById('edit-bio').value = profileData.bio
+
+            document.getElementById('edit-x-handle').value = profileData.socials.x.handle
+            document.getElementById('edit-x-url').value = profileData.socials.x.url
+            document.getElementById('edit-ig-handle').value = profileData.socials.ig.handle
+            document.getElementById('edit-ig-url').value = profileData.socials.ig.url
+            document.getElementById('edit-tg-handle').value = profileData.socials.telegram.handle
+            document.getElementById('edit-tg-url').value = profileData.socials.telegram.url
+            document.getElementById('edit-email').value = profileData.socials.email.handle
+            document.getElementById('edit-email-url').value = profileData.socials.email.url
+
+            // File upload listener
+            const fileInput = document.getElementById('edit-avatar-file')
+            fileInput.onchange = function(e) {
+                const file = e.target.files[0]
+                if (file) {
+                    const reader = new FileReader()
+                    reader.onload = function(ev) {
+                        document.getElementById('edit-avatar-preview').src = ev.target.result
+                        // Simpan sementara di profileData (akan di-save saat submit)
+                        window.tempAvatar = ev.target.result
+                    }
+                    reader.readAsDataURL(file)
+                }
+            }
+
+            const modal = document.getElementById('edit-modal')
+            modal.classList.remove('hidden')
+            modal.classList.add('flex')
+        }
+
+        function hideEditModal() {
+            const modal = document.getElementById('edit-modal')
+            modal.classList.add('hidden')
+            modal.classList.remove('flex')
+            window.tempAvatar = null
+        }
+
+        function saveProfile(e) {
+            e.preventDefault()
+
+            // Foto: prioritas base64 dari upload, kalau tidak ada pakai URL
+            if (window.tempAvatar) {
+                profileData.avatar = window.tempAvatar
+            } else if (document.getElementById('edit-avatar-url').value) {
+                profileData.avatar = document.getElementById('edit-avatar-url').value
+            }
+
+            profileData.name = document.getElementById('edit-name').value || profileData.name
+            profileData.username = document.getElementById('edit-username').value || profileData.username
+            profileData.location = document.getElementById('edit-location').value || profileData.location
+            profileData.bio = document.getElementById('edit-bio').value || profileData.bio
+
+            profileData.socials.x.handle = document.getElementById('edit-x-handle').value
+            profileData.socials.x.url = document.getElementById('edit-x-url').value
+            profileData.socials.ig.handle = document.getElementById('edit-ig-handle').value
+            profileData.socials.ig.url = document.getElementById('edit-ig-url').value
+            profileData.socials.telegram.handle = document.getElementById('edit-tg-handle').value
+            profileData.socials.telegram.url = document.getElementById('edit-tg-url').value
+            profileData.socials.email.handle = document.getElementById('edit-email').value
+            profileData.socials.email.url = document.getElementById('edit-email-url').value
+
+            saveToStorage()
+            renderProfile()
+            hideEditModal()
+            alert('✅ Profile berhasil disimpan! Foto sudah tersimpan langsung di HP kamu.')
+        }
+
+        // Init
+        window.onload = () => {
+            tailwind.config = { content: [], theme: { extend: {} } }
+            loadProfile()
+        }
+    </script>
+</body>
+</html>
